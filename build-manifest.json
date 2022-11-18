@@ -1,7 +1,7 @@
 {
   "assets": {
     "umi.css": "/umi.cd014d0a.css",
-    "umi.js": "/umi.63549f11.js",
+    "umi.js": "/umi.551222a7.js",
     "dumi__theme__layouts__GlobalLayout.js": "/dumi__theme__layouts__GlobalLayout.92306da0.async.js",
     "dumi__tmp-production__dumi__theme__ContextWrapper.js": "/dumi__tmp-production__dumi__theme__ContextWrapper.c97a300a.async.js",
     "dumi__theme__layouts__DocLayout__index.js": "/dumi__theme__layouts__DocLayout__index.5c6582a5.async.js",
@@ -150,8 +150,8 @@
     "components__checkbox__index.zh-CN.md.js": "/components__checkbox__index.zh-CN.md.474c9733.async.js",
     "components__collapse__index.en-US.md.js": "/components__collapse__index.en-US.md.4c3c1893.async.js",
     "components__collapse__index.zh-CN.md.js": "/components__collapse__index.zh-CN.md.86e45dc1.async.js",
-    "components__config-provider__index.en-US.md.js": "/components__config-provider__index.en-US.md.94f9941b.async.js",
-    "components__config-provider__index.zh-CN.md.js": "/components__config-provider__index.zh-CN.md.d2833f96.async.js",
+    "components__config-provider__index.en-US.md.js": "/components__config-provider__index.en-US.md.7e28b199.async.js",
+    "components__config-provider__index.zh-CN.md.js": "/components__config-provider__index.zh-CN.md.732928ca.async.js",
     "components__date-picker__index.en-US.md.js": "/components__date-picker__index.en-US.md.ac422408.async.js",
     "components__date-picker__index.zh-CN.md.js": "/components__date-picker__index.zh-CN.md.006d64b3.async.js",
     "components__descriptions__index.en-US.md.js": "/components__descriptions__index.en-US.md.ba2a36dc.async.js",
@@ -253,6 +253,6 @@
     "nm__dumi__dist__client__pages__Demo__index.js": "/nm__dumi__dist__client__pages__Demo__index.db32c6bd.async.js",
     "CHANGELOG.zh-CN.md.js": "/CHANGELOG.zh-CN.md.b5de806d.async.js",
     "CHANGELOG.en-US.md.js": "/CHANGELOG.en-US.md.d494ff5a.async.js",
-    "demos.js": "/demos.bb469f99.async.js"
+    "demos.js": "/demos.712ad068.async.js"
   }
 }
