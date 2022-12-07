@@ -5,7 +5,7 @@ import React from 'react';
 import TestUtils, { act } from 'react-dom/test-utils';
 
 import Modal from '..';
-import { fireEvent, render, sleep } from '../../../tests/utils';
+import { fireEvent, render, waitFakeTimer } from '../../../tests/utils';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import Input from '../../input';
@@ -17,7 +17,7 @@ jest.mock('rc-motion');
 describe('Modal.hook', () => {
   // Inject CSSMotion to replace with No transition support
   const MockCSSMotion = genCSSMotion(false);
-  Object.keys(MockCSSMotion).forEach(key => {
+  Object.keys(MockCSSMotion).forEach((key) => {
     // @ts-ignore
     CSSMotion[key] = MockCSSMotion[key];
   });
@@ -36,7 +36,7 @@ describe('Modal.hook', () => {
               instance = modal.confirm({
                 content: (
                   <Context.Consumer>
-                    {name => <div className="test-hook">{name}</div>}
+                    {(name) => <div className="test-hook">{name}</div>}
                   </Context.Consumer>
                 ),
               });
@@ -200,13 +200,11 @@ describe('Modal.hook', () => {
     jest.useFakeTimers();
 
     const clear = async function clear() {
-      await act(async () => {
-        jest.runAllTimers();
-        await sleep();
-      });
+      await waitFakeTimer();
     };
 
     const mockFn = jest.fn();
+
     const Demo = () => {
       const [modal, contextHolder] = Modal.useModal();
 
@@ -215,7 +213,7 @@ describe('Modal.hook', () => {
           closable: true,
           keyboard: true,
           maskClosable: true,
-          onCancel: close => mockFn(close),
+          onCancel: (close) => mockFn(close),
         });
       }, [modal]);
 
@@ -285,7 +283,7 @@ describe('Modal.hook', () => {
 
     expect(document.body.querySelectorAll('.ant-modal-confirm-confirm')).toHaveLength(1);
 
-    mockFn.mockImplementation(close => close());
+    mockFn.mockImplementation((close) => close());
 
     // Click the Cancel button to close (valid)
     fireEvent.click(document.body.querySelectorAll('.ant-modal-confirm-btns > .ant-btn')[0]);

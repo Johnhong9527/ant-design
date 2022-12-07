@@ -25,9 +25,9 @@ const localeValues: Locale = {
     selectionAll: 'בחר את כל הנתונים',
     sortTitle: 'מיון',
     expand: 'הרחב שורה',
-    collapse: 'צמצם שורהw',
-    triggerDesc: 'לחץ על מיון לפי סדר יורד',
-    triggerAsc: 'לחץ על מיון לפי סדר עולה',
+    collapse: 'צמצם שורה',
+    triggerDesc: 'לחץ למיון לפי סדר יורד',
+    triggerAsc: 'לחץ למיון לפי סדר עולה',
     cancelSort: 'לחץ כדי לבטל את המיון',
   },
   Modal: {
@@ -40,6 +40,7 @@ const localeValues: Locale = {
     cancelText: 'ביטול',
   },
   Transfer: {
+    titles: ['', ''],
     searchPlaceholder: 'חפש כאן',
     itemUnit: 'פריט',
     itemsUnit: 'פריטים',

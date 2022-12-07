@@ -165,4 +165,42 @@ describe('Badge', () => {
 
     expect(container.querySelectorAll('.ant-badge')).toHaveLength(2);
   });
+
+  it('Badge should display count when color and count are both exist', () => {
+    const { container } = render(
+      <>
+        <Badge className="badge1" text="badge" color="pink" count={44} />
+        <Badge className="badge2" text="badge" color="pink" count={0} />
+        <Badge className="badge3" text="badge" color="pink" />
+      </>,
+    );
+
+    expect(container.querySelectorAll('.ant-badge-count')).toHaveLength(1);
+    expect(container.querySelectorAll('[title="44"]')).toHaveLength(1);
+    expect(container.querySelectorAll('.ant-badge-status-dot')).toHaveLength(2);
+  });
+
+  it('Badge not render status-text when text is empty string', () => {
+    const { container } = render(<Badge status="default" text={undefined} />);
+
+    expect(container.querySelectorAll('.ant-badge > .ant-badge-status-text')).toHaveLength(0);
+  });
+
+  // https://github.com/ant-design/ant-design/issues/38965
+  it('should display custom color and number is 0', () => {
+    const { container } = render(
+      <>
+        <Badge count={0} showZero color="#ff0" />
+        <Badge count={0} showZero color="blue" />
+        <Badge count={0} showZero />
+        <Badge count={0} showZero color='green'>
+          <div />
+        </Badge>
+      </>,
+    );
+
+    expect(container).toMatchSnapshot();
+    expect(container.querySelectorAll('.ant-badge-count')).toHaveLength(4);
+    expect(container.querySelectorAll('[title="0"]')).toHaveLength(4);
+  });
 });

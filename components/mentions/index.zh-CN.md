@@ -1,9 +1,11 @@
 ---
 category: Components
 subtitle: 提及
-type: 数据录入
+group: 数据录入
 title: Mentions
-cover: https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg
+cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*e4bXT7Uhi9YAAAAAAAAAAAAADrJ8AQ/original
+demo:
+  cols: 2
 ---
 
 提及组件。
@@ -12,13 +14,20 @@ cover: https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg
 
 用于在输入中提及某人或某事，常用于发布、聊天或评论功能。
 
-## API
+## 代码演示
 
-```jsx
-<Mentions onChange={onChange}>
-  <Mentions.Option value="sample">Sample</Mentions.Option>
-</Mentions>
-```
+<!-- prettier-ignore -->
+<code src="./demo/basic.tsx">基本使用</code>
+<code src="./demo/async.tsx">异步加载</code>
+<code src="./demo/form.tsx">配合 Form 使用</code>
+<code src="./demo/prefix.tsx">自定义触发字符</code>
+<code src="./demo/readonly.tsx">无效或只读</code>
+<code src="./demo/placement.tsx">向上展开</code>
+<code src="./demo/autoSize.tsx">自动大小</code>
+<code src="./demo/status.tsx">自定义状态</code>
+<code src="./demo/render-panel.tsx" debug>_InternalPanelDoNotUseOrYouWillBeFired</code>
+
+## API
 
 ### Mentions
 
@@ -42,6 +51,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg
 | onResize | resize 回调 | function({ width, height }) | - |  |
 | onSearch | 搜索时触发 | (text: string, prefix: string) => void | - |  |
 | onSelect | 选择选项时触发 | (option: OptionProps, prefix: string) => void | - |  |
+| options | 选项配置 | [Options](#Option) | [] | 5.1.0 |
 
 ### Mentions 方法
 
@@ -52,7 +62,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg
 
 ### Option
 
-| 参数     | 说明           | 类型      | 默认值 |
-| -------- | -------------- | --------- | ------ |
-| children | 选项内容       | ReactNode | -      |
-| value    | 选择时填充的值 | string    | -      |
+| 参数      | 说明           | 类型                | 默认值 |
+| --------- | -------------- | ------------------- | ------ |
+| value     | 选择时填充的值 | string              | -      |
+| label     | 选项的标题     | React.ReactNode     | -      |
+| key       | 选项的 key 值  | string              | -      |
+| disabled  | 是否可选       | boolean             | -      |
+| className | css 类名       | string              | -      |
+| style     | 选项样式       | React.CSSProperties | -      |

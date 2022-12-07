@@ -1,8 +1,10 @@
 ---
 category: Components
-type: Data Entry
+group: Data Entry
 title: TreeSelect
-cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
+cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*DfTMRYSDngEAAAAAAAAAAAAADrJ8AQ/original
+demo:
+  cols: 2
 ---
 
 Tree selection control.
@@ -10,6 +12,20 @@ Tree selection control.
 ## When To Use
 
 `TreeSelect` is similar to `Select`, but the values are provided in a tree like structure. Any data whose entries are defined in a hierarchical manner is fit to use this control. Examples of such case may include a corporate hierarchy, a directory structure, and so on.
+
+## Examples
+
+<!-- prettier-ignore -->
+<code src="./demo/basic.tsx">Basic</code>
+<code src="./demo/multiple.tsx">Multiple Selection</code>
+<code src="./demo/treeData.tsx">Generate from tree data</code>
+<code src="./demo/checkable.tsx">Checkable</code>
+<code src="./demo/async.tsx">Asynchronous loading</code>
+<code src="./demo/treeLine.tsx">Show Tree Line</code>
+<code src="./demo/placement.tsx">Placement</code>
+<code src="./demo/status.tsx">Status</code>
+<code src="./demo/suffix.tsx" debug>Suffix</code>
+<code src="./demo/render-panel.tsx" debug>_InternalPanelDoNotUseOrYouWillBeFired</code>
 
 ## API
 
@@ -22,7 +38,7 @@ Tree selection control.
 | bordered | Whether has border style | boolean | true |  |
 | defaultValue | To set the initial selected treeNode(s) | string \| string\[] | - |  |
 | disabled | Disabled or not | boolean | false |  |
-| dropdownClassName | The className of dropdown menu | string | - |  |
+| popupClassName | The className of dropdown menu | string | - | 4.23.0 |
 | dropdownMatchSelectWidth | Determine whether the dropdown menu and the select input are the same width. Default set `min-width` same as input. Will ignore when value less than select width. `false` will disable virtual scroll | boolean \| number | true |  |
 | dropdownRender | Customize dropdown content | (originNode: ReactNode, props) => ReactNode | - |  |
 | dropdownStyle | To set the style of the dropdown menu | CSSProperties | - |  |

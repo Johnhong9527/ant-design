@@ -1,16 +1,18 @@
 import HolderOutlined from '@ant-design/icons/HolderOutlined';
 import classNames from 'classnames';
 import type { BasicDataNode, TreeProps as RcTreeProps } from 'rc-tree';
-import RcTree, { TreeNode } from 'rc-tree';
+import RcTree from 'rc-tree';
 import type { DataNode, Key } from 'rc-tree/lib/interface';
 import * as React from 'react';
 import { ConfigContext } from '../config-provider';
-import collapseMotion from '../_util/motion';
-import DirectoryTree from './DirectoryTree';
+import initCollapseMotion from '../_util/motion';
 import dropIndicatorRender from './utils/dropIndicator';
 import renderSwitcherIcon from './utils/iconUtil';
 
+import useStyle from './style';
+
 export type SwitcherIcon = React.ReactNode | ((props: AntTreeNodeProps) => React.ReactNode);
+export type TreeLeafIcon = React.ReactNode | ((props: AntTreeNodeProps) => React.ReactNode);
 
 export interface AntdTreeNodeAttribute {
   eventKey: string;
@@ -107,7 +109,7 @@ export interface TreeProps<T extends BasicDataNode = DataNode>
     RcTreeProps<T>,
     'prefixCls' | 'showLine' | 'direction' | 'draggable' | 'icon' | 'switcherIcon'
   > {
-  showLine?: boolean | { showLeafIcon: boolean };
+  showLine?: boolean | { showLeafIcon: boolean | TreeLeafIcon };
   className?: string;
   /** 是否支持多选 */
   multiple?: boolean;
@@ -153,34 +155,42 @@ export interface TreeProps<T extends BasicDataNode = DataNode>
   blockNode?: boolean;
 }
 
-type CompoundedComponent = (<T extends BasicDataNode | DataNode = DataNode>(
-  props: React.PropsWithChildren<TreeProps<T>> & { ref?: React.Ref<RcTree> },
-) => React.ReactElement) & {
-  defaultProps: Partial<React.PropsWithChildren<TreeProps<any>>>;
-  TreeNode: typeof TreeNode;
-  DirectoryTree: typeof DirectoryTree;
-};
-
 const Tree = React.forwardRef<RcTree, TreeProps>((props, ref) => {
   const { getPrefixCls, direction, virtual } = React.useContext(ConfigContext);
   const {
     prefixCls: customizePrefixCls,
     className,
-    showIcon,
+    showIcon = false,
     showLine,
     switcherIcon,
-    blockNode,
+    blockNode = false,
     children,
-    checkable,
-    selectable,
+    checkable = false,
+    selectable = true,
     draggable,
+    motion: customMotion,
   } = props;
+
   const prefixCls = getPrefixCls('tree', customizePrefixCls);
+  const rootPrefixCls = getPrefixCls();
+
+  const motion = customMotion ?? {
+    ...initCollapseMotion(rootPrefixCls),
+    motionAppear: false,
+  };
+
   const newProps = {
     ...props,
+    checkable,
+    selectable,
+    showIcon,
+    motion,
+    blockNode,
     showLine: Boolean(showLine),
     dropIndicatorRender,
   };
+
+  const [wrapSSR, hashId] = useStyle(prefixCls);
 
   const draggableConfig = React.useMemo(() => {
     if (!draggable) {
@@ -192,12 +202,11 @@ const Tree = React.forwardRef<RcTree, TreeProps>((props, ref) => {
       case 'function':
         mergedDraggable.nodeDraggable = draggable;
         break;
-
       case 'object':
         mergedDraggable = { ...draggable };
         break;
-
       default:
+        break;
       // Do nothing
     }
 
@@ -208,7 +217,7 @@ const Tree = React.forwardRef<RcTree, TreeProps>((props, ref) => {
     return mergedDraggable;
   }, [draggable]);
 
-  return (
+  return wrapSSR(
     <RcTree
       itemHeight={20}
       ref={ref}
@@ -223,6 +232,7 @@ const Tree = React.forwardRef<RcTree, TreeProps>((props, ref) => {
           [`${prefixCls}-rtl`]: direction === 'rtl',
         },
         className,
+        hashId,
       )}
       direction={direction}
       checkable={checkable ? <span className={`${prefixCls}-checkbox-inner`} /> : checkable}
@@ -230,26 +240,11 @@ const Tree = React.forwardRef<RcTree, TreeProps>((props, ref) => {
       switcherIcon={(nodeProps: AntTreeNodeProps) =>
         renderSwitcherIcon(prefixCls, switcherIcon, showLine, nodeProps)
       }
-      draggable={draggableConfig as any}
+      draggable={draggableConfig}
     >
       {children}
-    </RcTree>
+    </RcTree>,
   );
-}) as unknown as CompoundedComponent;
-
-Tree.TreeNode = TreeNode;
-
-Tree.DirectoryTree = DirectoryTree;
-
-Tree.defaultProps = {
-  checkable: false,
-  selectable: true,
-  showIcon: false,
-  motion: {
-    ...collapseMotion,
-    motionAppear: false,
-  },
-  blockNode: false,
-};
+});
 
 export default Tree;

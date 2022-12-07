@@ -2,18 +2,27 @@ import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import classNames from 'classnames';
 import omit from 'rc-util/lib/omit';
+import { composeRef } from 'rc-util/lib/ref';
 import * as React from 'react';
-
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { ConfigConsumerProps } from '../config-provider';
 import { ConfigConsumer } from '../config-provider';
+import useRemovePasswordTimeout from './hooks/useRemovePasswordTimeout';
 import type { InputProps, InputRef } from './Input';
 import Input from './Input';
+
+const defaultIconRender = (visible: boolean): React.ReactNode =>
+  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />;
+
+type VisibilityToggle = {
+  visible?: boolean;
+  onVisibleChange?: (visible: boolean) => void;
+};
 
 export interface PasswordProps extends InputProps {
   readonly inputPrefixCls?: string;
   readonly action?: string;
-  visibilityToggle?: boolean;
+  visibilityToggle?: boolean | VisibilityToggle;
   iconRender?: (visible: boolean) => React.ReactNode;
 }
 
@@ -23,20 +32,43 @@ const ActionMap: Record<string, string> = {
 };
 
 const Password = React.forwardRef<InputRef, PasswordProps>((props, ref) => {
-  const [visible, setVisible] = useState(false);
+  const { visibilityToggle = true } = props;
+  const visibilityControlled =
+    typeof visibilityToggle === 'object' && visibilityToggle.visible !== undefined;
+  const [visible, setVisible] = useState(() =>
+    visibilityControlled ? visibilityToggle.visible! : false,
+  );
+  const inputRef = useRef<InputRef>(null);
+
+  React.useEffect(() => {
+    if (visibilityControlled) {
+      setVisible(visibilityToggle.visible!);
+    }
+  }, [visibilityControlled, visibilityToggle]);
+
+  // Remove Password value
+  const removePasswordTimeout = useRemovePasswordTimeout(inputRef);
 
   const onVisibleChange = () => {
     const { disabled } = props;
     if (disabled) {
       return;
     }
-
-    setVisible(!visible);
+    if (visible) {
+      removePasswordTimeout();
+    }
+    setVisible((prevState) => {
+      const newState = !prevState;
+      if (typeof visibilityToggle === 'object') {
+        visibilityToggle.onVisibleChange?.(newState);
+      }
+      return newState;
+    });
   };
 
   const getIcon = (prefixCls: string) => {
-    const { action, iconRender = () => null } = props;
-    const iconTrigger = ActionMap[action!] || '';
+    const { action = 'click', iconRender = defaultIconRender } = props;
+    const iconTrigger = ActionMap[action] || '';
     const icon = iconRender(visible);
     const iconProps = {
       [iconTrigger]: onVisibleChange,
@@ -62,7 +94,6 @@ const Password = React.forwardRef<InputRef, PasswordProps>((props, ref) => {
       prefixCls: customizePrefixCls,
       inputPrefixCls: customizeInputPrefixCls,
       size,
-      visibilityToggle,
       ...restProps
     } = props;
 
@@ -75,7 +106,7 @@ const Password = React.forwardRef<InputRef, PasswordProps>((props, ref) => {
     });
 
     const omittedProps: InputProps = {
-      ...omit(restProps, ['suffix', 'iconRender']),
+      ...omit(restProps, ['suffix', 'iconRender', 'visibilityToggle']),
       type: visible ? 'text' : 'password',
       className: inputClassName,
       prefixCls: inputPrefixCls,
@@ -86,17 +117,11 @@ const Password = React.forwardRef<InputRef, PasswordProps>((props, ref) => {
       omittedProps.size = size;
     }
 
-    return <Input ref={ref} {...omittedProps} />;
+    return <Input ref={composeRef(ref, inputRef)} {...omittedProps} />;
   };
 
   return <ConfigConsumer>{renderPassword}</ConfigConsumer>;
 });
-
-Password.defaultProps = {
-  action: 'click',
-  visibilityToggle: true,
-  iconRender: (visible: boolean) => (visible ? <EyeOutlined /> : <EyeInvisibleOutlined />),
-};
 
 if (process.env.NODE_ENV !== 'production') {
   Password.displayName = 'Password';

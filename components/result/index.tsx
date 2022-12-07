@@ -12,6 +12,8 @@ import noFound from './noFound';
 import serverError from './serverError';
 import unauthorized from './unauthorized';
 
+import useStyle from './style';
+
 export const IconMap = {
   success: CheckCircleFilled,
   error: CloseCircleFilled,
@@ -73,9 +75,14 @@ const Icon: React.FC<IconProps> = ({ prefixCls, icon, status }) => {
       </div>
     );
   }
+
   const iconNode = React.createElement(
     IconMap[status as Exclude<ResultStatusType, ExceptionStatusType>],
   );
+
+  if (icon === null || icon === false) {
+    return null;
+  }
 
   return <div className={className}>{icon || iconNode}</div>;
 };
@@ -112,17 +119,26 @@ const Result: ResultType = ({
   const { getPrefixCls, direction } = React.useContext(ConfigContext);
 
   const prefixCls = getPrefixCls('result', customizePrefixCls);
-  const className = classNames(prefixCls, `${prefixCls}-${status}`, customizeClassName, {
-    [`${prefixCls}-rtl`]: direction === 'rtl',
-  });
-  return (
+
+  // Style
+  const [wrapSSR, hashId] = useStyle(prefixCls);
+
+  const className = classNames(
+    prefixCls,
+    `${prefixCls}-${status}`,
+    customizeClassName,
+    { [`${prefixCls}-rtl`]: direction === 'rtl' },
+    hashId,
+  );
+
+  return wrapSSR(
     <div className={className} style={style}>
       <Icon prefixCls={prefixCls} status={status} icon={icon} />
       <div className={`${prefixCls}-title`}>{title}</div>
       {subTitle && <div className={`${prefixCls}-subtitle`}>{subTitle}</div>}
       <Extra prefixCls={prefixCls} extra={extra} />
       {children && <div className={`${prefixCls}-content`}>{children}</div>}
-    </div>
+    </div>,
   );
 };
 
